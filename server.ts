@@ -3,13 +3,13 @@ const http = require("http");
 const bcrypt = require("bcrypt");
 const path = require("path");
 const bodyParser = require("body-parser");
-const users = require("./data").userDB;
+const { userDB: users } = require("./data/userDB");
 const PasswordCheckService = require("./PasswordCheckService");
 
 const app = express();
 const server = http.createServer(app);
 
-app.post("/register", async (req, res) => {
+app.post("/register", async (req: any, res: any) => {
   try {
     let foundUser = users.find(data => req.body.email === data.email);
     if (!foundUser) {
@@ -42,7 +42,7 @@ app.post("/register", async (req, res) => {
   }
 });
 
-app.post("/login", async (req, res) => {
+app.post("/login", async (req: any, res: any) => {
   try {
     let foundUser = users.find(data => req.body.email === data.email);
     if (foundUser) {
