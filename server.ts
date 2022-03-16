@@ -4,6 +4,7 @@ const bcrypt = require("bcrypt");
 const path = require("path");
 const bodyParser = require("body-parser");
 const users = require("./data").userDB;
+const PasswordCheckService = require("./PasswordCheckService");
 
 const app = express();
 const server = http.createServer(app);
@@ -13,6 +14,16 @@ app.post("/register", async (req, res) => {
     let foundUser = users.find(data => req.body.email === data.email);
     if (!foundUser) {
       let hashPassword = await bcrypt.hash(req.body.password, 10);
+
+      if (PasswordCheckService.checkPasswordStrength(hashPassword) == "Short") {
+        res.send("Password is Short");
+        return;
+      }
+
+      if (PasswordCheckService.checkPasswordStrength(hashPassword) == "Weak") {
+        res.send("Password is Weak");
+        return;
+      }
 
       let newUser = {
         name: req.body.name,
